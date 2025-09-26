@@ -1,9 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
-import api from '@/api';
+import { useMemo } from 'react';
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
-import * as z from "zod";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from './ui/button';
@@ -13,13 +10,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Calendar as CalendarIcon, GripVertical } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { Transaction, getColumns } from './columns';
 import { AddEditTransactionForm } from './AddEditTransactionForm';
+import { useTransactions } from '@/hooks/useTransactions'; // Import the new hook
 
-// Data Table Component (no major changes)
+// Data Table Component (no changes)
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -70,96 +68,33 @@ function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValu
 }
 
 
-// Parent component that fetches data and manages all state
+// Parent component is now a clean UI layer
 export const TransactionManager = () => {
-  // Data and Pagination State
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
-  // Filter State
-  const [search, setSearch] = useState('');
-  const [sort, setSort] = useState({ sortBy: 'date', order: 'desc' });
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
-
-  // Modal and Dialog State
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | undefined>(undefined);
-  const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
-
-  // Data Fetching Function
-  const fetchTransactions = async () => {
-    try {
-      const params = {
+    const {
+        transactions,
         page,
-        limit: 10,
+        totalPages,
         search,
-        sortBy: sort.sortBy,
-        order: sort.order,
-        fromDate: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-        toDate: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-      };
-      const { data } = await api.get('/transactions', { params });
-      setTransactions(data.data);
-      setTotalPages(data.totalPages);
-    } catch (error) {
-      console.error("Failed to fetch transactions", error);
-    }
-  };
+        sort,
+        dateRange,
+        isModalOpen,
+        isDeleteDialogOpen,
+        selectedTransaction,
+        setPage,
+        setSearch,
+        setSort,
+        setDateRange,
+        setIsModalOpen,
+        setIsDeleteDialogOpen,
+        handleFormSubmit,
+        handleDeleteConfirm,
+        handleOpenAdd,
+        handleOpenEdit,
+        handleOpenDelete,
+    } = useTransactions();
 
-  // Effects
-  useEffect(() => {
-    fetchTransactions();
-  }, [page, search, sort, dateRange]);
-
-  // Event Handlers for CRUD
-  const handleOpenAdd = () => {
-    setSelectedTransaction(undefined);
-    setIsModalOpen(true);
-  };
-  
-  const handleOpenEdit = (transaction: Transaction) => {
-    setSelectedTransaction(transaction);
-    setIsModalOpen(true);
-  };
-
-  const handleOpenDelete = (transactionId: string) => {
-    setTransactionToDelete(transactionId);
-    setIsDeleteDialogOpen(true);
-  };
-  
-  const handleDeleteConfirm = async () => {
-    if (!transactionToDelete) return;
-    try {
-      await api.delete(`/transactions/${transactionToDelete}`);
-      fetchTransactions(); // Refetch data after delete
-      setIsDeleteDialogOpen(false);
-      setTransactionToDelete(null);
-    } catch (error) {
-      console.error("Failed to delete transaction", error);
-    }
-  };
-
-  const handleFormSubmit = async (values: z.infer<any>) => {
-    try {
-        if (selectedTransaction) {
-            // Update
-            await api.put(`/transactions/${selectedTransaction._id}`, values);
-        } else {
-            // Create
-            await api.post('/transactions', values);
-        }
-        fetchTransactions(); // Refetch data
-        setIsModalOpen(false);
-        setSelectedTransaction(undefined);
-    } catch (error) {
-        console.error("Failed to save transaction", error);
-    }
-  };
-  
   // Table Columns
-  const columns = useMemo(() => getColumns(handleOpenEdit, handleOpenDelete), []);
+  const columns = useMemo(() => getColumns(handleOpenEdit, handleOpenDelete), [handleOpenEdit, handleOpenDelete]);
   
   return (
     <div className="container mx-auto py-10">
@@ -177,7 +112,6 @@ export const TransactionManager = () => {
           className="max-w-sm"
         />
         <div className="flex items-center gap-2">
-            {/* Sort Filter */}
             <Select
                 value={`${sort.sortBy}-${sort.order}`}
                 onValueChange={(value) => {
@@ -196,7 +130,6 @@ export const TransactionManager = () => {
                 </SelectContent>
             </Select>
 
-            {/* Date Range Filter */}
             <Popover>
                 <PopoverTrigger asChild>
                 <Button

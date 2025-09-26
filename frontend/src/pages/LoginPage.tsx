@@ -1,33 +1,34 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '@/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/AuthContext';
+import { Eye, EyeOff } from 'lucide-react'; // 1. Import eye icons
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  // 2. Add state to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post('/auth/login', { username, password });
-      localStorage.setItem('token', response.data.token); // [cite: 36]
-      navigate('/dashboard'); // [cite: 37]
+      await login({ username, password });
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="p-8 bg-white rounded-lg shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-md p-8 space-y-6 bg-card text-card-foreground rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold text-center">Login</h1>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
             <Label htmlFor="username">Username</Label>
             <Input
               id="username"
@@ -37,17 +38,31 @@ const LoginPage = () => {
               required
             />
           </div>
-          <div className="mb-6">
+
+          {/* 3. Update the password input field */}
+          <div>
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                // The input type is now dynamic based on state
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              {/* This is the icon button to toggle visibility */}
+              <button
+                type="button" // Use type="button" to prevent form submission
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <Button type="submit" className="w-full">
             Log In
           </Button>

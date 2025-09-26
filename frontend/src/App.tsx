@@ -1,27 +1,39 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
-import ProtectedRoute from './components/auth/ProtectedRoute';
+import { useAuth } from './contexts/AuthContext';
 
 function App() {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <Router>
-      <Routes>
-        {/* Public Route */}
-        <Route path="/login" element={<LoginPage />} />
+    // 1. Main layout wrapper
+    // This uses flexbox to push the footer to the bottom of the viewport
+    <div className="flex flex-col min-h-screen">
+      {/* 2. Main content area */}
+      {/* This part will grow to fill the available space */}
+      <main className="flex-grow">
+        <Routes>
+          <Route
+            path="/login"
+            element={!isAuthenticated ? <LoginPage /> : <Navigate to="/dashboard" />}
+          />
+          <Route
+            path="/dashboard"
+            element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="*"
+            element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />}
+          />
+        </Routes>
+      </main>
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-        </Route>
-
-        {/* Redirect root path to the dashboard */}
-        <Route path="/" element={<Navigate to="/dashboard" />} />
-        
-        {/* Fallback for any other route */}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
-    </Router>
+      {/* 3. Footer element */}
+      <footer className="w-full py-4 text-center border-t text-sm text-muted-foreground">
+        Made with ❤️ by Lalita Khatri
+      </footer>
+    </div>
   );
 }
 

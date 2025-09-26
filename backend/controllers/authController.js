@@ -3,11 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// @route   POST /auth/register [cite: 16]
-// @desc    Register a user [cite: 18]
+// @route   POST /auth/register
+// @desc    Register a user
 exports.register = async (req, res) => {
   const { username, password } = req.body;
-
   try {
     let user = await User.findOne({ username });
     if (user) {
@@ -17,7 +16,7 @@ exports.register = async (req, res) => {
     user = new User({ username, password });
     await user.save();
 
-    const payload = { user: { id: user.id } };
+    const payload = { user: { id: user.id, role: user.role } };
 
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' }, (err, token) => {
       if (err) throw err;
@@ -29,11 +28,10 @@ exports.register = async (req, res) => {
   }
 };
 
-// @route   POST /auth/login [cite: 17]
-// @desc    Authenticate user & get token [cite: 19]
+// @route   POST /auth/login
+// @desc    Authenticate user & get token
 exports.login = async (req, res) => {
   const { username, password } = req.body;
-
   try {
     let user = await User.findOne({ username });
     if (!user) {
@@ -45,7 +43,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid Credentials' });
     }
 
-    const payload = { user: { id: user.id } };
+    const payload = { user: { id: user.id, role: user.role } };
 
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' }, (err, token) => {
       if (err) throw err;
