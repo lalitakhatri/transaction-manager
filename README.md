@@ -1,46 +1,60 @@
-Fullstack Transaction Management System
-This is a comprehensive fullstack application designed for managing personal or business transactions. It features a secure backend API built with Node.js, Express, and MongoDB, and a modern, responsive frontend built with React, Vite, and shadcn/ui.
+<div align="center">
+<h1>📊 Fullstack Transaction Management System 📊</h1>
+<p>A modern, full-featured application for managing transactions with a secure Node.js backend and a responsive React frontend.</p>
+</div>
 
-GitHub Repository: https://github.com/lalitakhatri/transaction-manager
+✨ Core Features
+🔐 Secure JWT Authentication: User registration and login with protected API routes.
 
-✨ Features Implemented
-Authentication: Secure user registration and login using JSON Web Tokens (JWT).
+✍️ Full CRUD Operations: Create, Read, Update, and Delete transactions through an intuitive modal interface.
 
-CRUD Operations: Full Create, Read, Update, Search and Delete functionality for transactions.
-
-Advanced Filtering & Sorting:
+🔍 Advanced Filtering & Sorting:
 
 Live search by description, payee, or category.
 
-Sort transactions by date or amount (ascending/descending).
+Sort data by date or amount (ascending/descending).
 
 Filter transactions within a specific date range.
 
-Pagination: Efficient backend-driven pagination for handling large datasets.
+📄 Backend-Driven Pagination: Efficiently handle large datasets with smart pagination controls.
 
-Modern UI: A clean and responsive user interface built with TailwindCSS and shadcn/ui.
+🇮🇳 Currency Formatting: Displays all monetary values in Indian Rupees (₹).
 
-Currency Formatting: Displays monetary values in Indian Rupees (₹).
+🏆 Bonus Features Implemented
+👑 Role-Based Access Control: Admin role can view and manage all user transactions, while a User can only see their own.
 
-Bonus Features
-Role-Based Access Control: Differentiates between user and admin roles. Admins can view and manage all transactions on the platform.
+🌗 Light & Dark Mode: A sleek theme toggle for a comfortable viewing experience at any time of day.
 
-Dark Mode: A theme toggle allows users to switch between light and dark modes.
+🎣 Reusable React Hooks: Clean, maintainable state management using useAuth and useTransactions for a scalable architecture.
 
-Reusable Hooks: Custom React hooks (useAuth, useTransactions) for clean and maintainable state management.
+🛠️ Tech Stack & Tools
+<p align="center">
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Node.js-339933%3Fstyle%3Dfor-the-badge%26logo%3Dnodedotjs%26logoColor%3Dwhite" alt="Node.js"/>
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Express.js-000000%3Fstyle%3Dfor-the-badge%26logo%3Dexpress%26logoColor%3Dwhite" alt="Express.js"/>
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/MongoDB-47A248%3Fstyle%3Dfor-the-badge%26logo%3Dmongodb%26logoColor%3Dwhite" alt="MongoDB"/>
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/React-20232A%3Fstyle%3Dfor-the-badge%26logo%3Dreact%26logoColor%3D61DAFB" alt="React"/>
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Vite-646CFF%3Fstyle%3Dfor-the-badge%26logo%3Dvite%26logoColor%3Dwhite" alt="Vite"/>
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/TypeScript-007ACC%3Fstyle%3Dfor-the-badge%26logo%3Dtypescript%26logoColor%3Dwhite" alt="TypeScript"/>
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Tailwind_CSS-38B2AC%3Fstyle%3Dfor-the-badge%26logo%3Dtailwind-css%26logoColor%3Dwhite" alt="Tailwind CSS"/>
+</p>
 
-🛠️ Tech Stack
-Backend: Node.js, Express.js, MongoDB with Mongoose, JWT, bcrypt, dotenv.
+🚀 Getting Started
+Follow these instructions to get the project up and running on your local machine.
 
-Frontend: React, Vite, TypeScript, TailwindCSS, shadcn/ui, TanStack Table, React Hook Form, Zod.
+✅ Prerequisites
+Node.js (v18 or newer)
 
-🚀 Setup and Installation
+MongoDB (Local instance or a free Atlas account)
+
+Postman (for API setup)
+
+⚙️ Installation & Setup
 1. Clone the Repository
-git clone https://github.com/lalitakhatri/transaction-manager.git
+
+git clone [https://github.com/](https://github.com/)<your-username>/transaction-manager.git
 cd transaction-manager
 
-2. Backend Setup
-Navigate to the backend directory and set up the environment variables.
+2. Configure Backend
 
 cd backend
 
@@ -51,23 +65,19 @@ Example backend/.env file:
 # Server Port
 PORT=5000
 
-# Your MongoDB connection string
-# --- For local MongoDB ---
-# MONGO_URI=mongodb://localhost:27017/transactiondb
-# --- For MongoDB Atlas ---
-MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/dbname
+# Your MongoDB connection string (replace with your own)
+MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/transactiondb
 
 # A strong, secret key for signing JWTs
-JWT_SECRET=a-very-strong-and-secret-key-for-jwt
+JWT_SECRET=this-is-a-super-secret-key-for-my-project
 
-Install backend dependencies:
+Then, install dependencies:
 
 npm install
 
-3. Frontend Setup
-In a new terminal, navigate to the frontend directory.
+3. Configure Frontend
 
-cd frontend
+cd ../frontend
 
 Create a .env file in the frontend directory.
 
@@ -76,35 +86,29 @@ Example frontend/.env file:
 # The URL of your running backend server
 VITE_API_BASE_URL=http://localhost:5000
 
-Install frontend dependencies:
+Then, install dependencies:
 
 npm install
 
 🏃 How to Run the Application
-You must run both the backend and frontend servers simultaneously in two separate terminals.
+You must run both servers simultaneously in two separate terminals.
 
-Terminal 1: Start the Backend Server
+➡️ Terminal 1: Start the Backend
 
-# Navigate to the backend directory
-cd backend
-
-# Start the server in development mode (with auto-reload)
+# In the /backend directory
 npm run dev
 
-Your backend API will be running at http://localhost:5000.
+✅ Backend API will be live at http://localhost:5000.
 
-Terminal 2: Start the Frontend Server
+➡️ Terminal 2: Start the Frontend
 
-# Navigate to the frontend directory
-cd frontend
-
-# Start the Vite development server
+# In the /frontend directory
 npm run dev
 
-Your frontend application will be available at http://localhost:5173. Open this URL in your browser.
+✅ Frontend application will be live at http://localhost:5173. Open this in your browser!
 
-👥 User Information
-For testing purposes, two users have been created. First, register them using Postman, then you can log in via the UI.
+👥 User Setup & Admin Role
+Before using the app, you must register users via Postman.
 
 Regular User:
 
@@ -118,19 +122,13 @@ Username: user2
 
 Password: password@456
 
-How to Make user2 an Admin
-After registering both user1 and user2 via Postman, you need to manually change the role of user2 in your MongoDB database.
+elevating user2 to Admin
+After registering both users, you must manually change user2's role in the database.
 
-Open your MongoDB database viewer (like MongoDB Compass or the Atlas UI).
-
-Navigate to your database (e.g., transactiondb).
+Connect to your MongoDB database using a tool like MongoDB Compass.
 
 Open the users collection.
 
-Find the document where the username is user2.
+Find the document where username is user2.
 
-Edit this document and change the role field from "user" to "admin".
-
-Save the change.
-
-Now, when user2 logs in, they will have admin privileges and will be able to see all transactions from all users.
+Edit the role field from "user" to "admin" and save.
