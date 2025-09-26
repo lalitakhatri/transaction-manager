@@ -52,6 +52,7 @@ Postman (for API setup)
 1. Clone the Repository
 
 git clone [https://github.com/](https://github.com/)<your-username>/transaction-manager.git
+
 cd transaction-manager
 
 2. Configure Backend
